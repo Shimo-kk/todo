@@ -20,3 +20,16 @@ services:
     volumes:
       - ./container/backend/src:/src
     tty: true
+  frontend:
+    container_name: todo-frontend
+    build:
+      context: ./container/frontend/
+      dockerfile: ./Dockerfile
+    ports:
+      - "3000:3000"
+    volumes:
+      - ./container/frontend/src:/src
+      - node_modules:/src/node_modules
+    tty: true
+volumes:
+  node_modules:
