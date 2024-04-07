@@ -6,6 +6,7 @@ import (
 
 	"todo/app/application/interface/database"
 	"todo/app/application/schema"
+	"todo/app/application/usecase"
 	"todo/app/presentation/controller"
 	appmiddleware "todo/app/presentation/middleware"
 
@@ -16,7 +17,10 @@ import (
 )
 
 func SetUp(e *echo.Echo, logger *zap.Logger, databaseHandller database.IDatabaseHandller) error {
+	authUsecase := usecase.NewAuthUsecase(databaseHandller)
+
 	csrfController := controller.NewCsrfController()
+	authContoller := controller.NewAuthController(authUsecase)
 
 	// apiグループ
 	api := e.Group("/api")
@@ -56,6 +60,11 @@ func SetUp(e *echo.Echo, logger *zap.Logger, databaseHandller database.IDatabase
 
 	// CSRF関連
 	api.GET("/csrf", csrfController.GetCsrfToken)
+
+	// 認証関連
+	api.POST("/auth/signup", authContoller.SignUp)
+	api.POST("/auth/signin", authContoller.SignIn)
+	api.POST("/auth/signout", authContoller.SignOut)
 
 	// v1グループ
 	v1 := api.Group("/v1")

@@ -16,11 +16,11 @@ func NewCsrfController() *csrfController {
 }
 
 // CSRFトークンの取得
-func (ac *csrfController) GetCsrfToken(c echo.Context) error {
-	token := c.Get("csrf").(string)
+func (c *csrfController) GetCsrfToken(context echo.Context) error {
+	token := context.Get("csrf").(string)
 
 	resonseBody := schema.CSRFModel{
 		Csrf: token,
 	}
-	return c.JSON(http.StatusOK, resonseBody)
+	return context.JSON(http.StatusOK, resonseBody)
 }

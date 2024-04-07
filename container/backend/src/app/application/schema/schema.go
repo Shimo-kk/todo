@@ -17,11 +17,46 @@ type DefaultResponseModel struct {
 	Message string `json:"message"`
 }
 
+// SignInModel defines model for SignInModel.
+type SignInModel struct {
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+// SignUpModel defines model for SignUpModel.
+type SignUpModel struct {
+	Email    string `json:"email"`
+	Name     string `json:"name"`
+	Password string `json:"password"`
+}
+
+// UserReadModel defines model for UserReadModel.
+type UserReadModel struct {
+	Email string `json:"email"`
+	Id    int    `json:"id"`
+	Name  string `json:"name"`
+}
+
+// SignInJSONRequestBody defines body for SignIn for application/json ContentType.
+type SignInJSONRequestBody = SignInModel
+
+// SignUpJSONRequestBody defines body for SignUp for application/json ContentType.
+type SignUpJSONRequestBody = SignUpModel
+
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
 
 	// (GET /api)
 	GetApi(ctx echo.Context) error
+
+	// (POST /api/auth/signin)
+	SignIn(ctx echo.Context) error
+
+	// (GET /api/auth/signout)
+	SignOut(ctx echo.Context) error
+
+	// (POST /api/auth/signup)
+	SignUp(ctx echo.Context) error
 
 	// (GET /api/csrf)
 	GetCsrfToken(ctx echo.Context) error
@@ -38,6 +73,33 @@ func (w *ServerInterfaceWrapper) GetApi(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.GetApi(ctx)
+	return err
+}
+
+// SignIn converts echo context to params.
+func (w *ServerInterfaceWrapper) SignIn(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.SignIn(ctx)
+	return err
+}
+
+// SignOut converts echo context to params.
+func (w *ServerInterfaceWrapper) SignOut(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.SignOut(ctx)
+	return err
+}
+
+// SignUp converts echo context to params.
+func (w *ServerInterfaceWrapper) SignUp(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.SignUp(ctx)
 	return err
 }
 
@@ -79,6 +141,9 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	}
 
 	router.GET(baseURL+"/api", wrapper.GetApi)
+	router.POST(baseURL+"/api/auth/signin", wrapper.SignIn)
+	router.GET(baseURL+"/api/auth/signout", wrapper.SignOut)
+	router.POST(baseURL+"/api/auth/signup", wrapper.SignUp)
 	router.GET(baseURL+"/api/csrf", wrapper.GetCsrfToken)
 
 }
