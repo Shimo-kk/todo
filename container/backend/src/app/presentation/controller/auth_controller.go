@@ -35,7 +35,7 @@ func (c *authController) SignUp(context echo.Context) error {
 		return err
 	}
 
-	return context.JSON(http.StatusOK, responce.NewDefaultRespoce("サインアップに成功しました。"))
+	return context.JSON(http.StatusOK, responce.NewDefaultRespoce("サインアップしました。"))
 }
 
 // サインイン

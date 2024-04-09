@@ -4,7 +4,12 @@
 package schema
 
 import (
+	"fmt"
+	"net/http"
+	"time"
+
 	"github.com/labstack/echo/v4"
+	"github.com/oapi-codegen/runtime"
 )
 
 // CSRFModel defines model for CSRFModel.
@@ -30,6 +35,36 @@ type SignUpModel struct {
 	Password string `json:"password"`
 }
 
+// TaskCreateModel defines model for TaskCreateModel.
+type TaskCreateModel struct {
+	CategoryId int       `json:"category_id"`
+	Detail     string    `json:"detail"`
+	PriorityId int       `json:"priority_id"`
+	StartDate  time.Time `json:"start_date"`
+	Title      string    `json:"title"`
+}
+
+// TaskReadModel defines model for TaskReadModel.
+type TaskReadModel struct {
+	CategoryId int       `json:"category_id"`
+	Detail     string    `json:"detail"`
+	DoneFlag   bool      `json:"done_flag"`
+	Id         int       `json:"id"`
+	PriorityId int       `json:"priority_id"`
+	StartDate  time.Time `json:"start_date"`
+	Title      string    `json:"title"`
+}
+
+// TaskUpdateModel defines model for TaskUpdateModel.
+type TaskUpdateModel struct {
+	CategoryId int       `json:"category_id"`
+	Detail     string    `json:"detail"`
+	Id         int       `json:"id"`
+	PriorityId int       `json:"priority_id"`
+	StartDate  time.Time `json:"start_date"`
+	Title      string    `json:"title"`
+}
+
 // UserReadModel defines model for UserReadModel.
 type UserReadModel struct {
 	Email string `json:"email"`
@@ -42,6 +77,12 @@ type SignInJSONRequestBody = SignInModel
 
 // SignUpJSONRequestBody defines body for SignUp for application/json ContentType.
 type SignUpJSONRequestBody = SignUpModel
+
+// CreateTaskJSONRequestBody defines body for CreateTask for application/json ContentType.
+type CreateTaskJSONRequestBody = TaskCreateModel
+
+// UpdateTaskJSONRequestBody defines body for UpdateTask for application/json ContentType.
+type UpdateTaskJSONRequestBody = TaskUpdateModel
 
 // ServerInterface represents all server handlers.
 type ServerInterface interface {
@@ -60,6 +101,24 @@ type ServerInterface interface {
 
 	// (GET /api/csrf)
 	GetCsrfToken(ctx echo.Context) error
+
+	// (POST /api/v1/task)
+	CreateTask(ctx echo.Context) error
+
+	// (PUT /api/v1/task)
+	UpdateTask(ctx echo.Context) error
+
+	// (GET /api/v1/task/done/{id})
+	DoneTask(ctx echo.Context, id int) error
+
+	// (DELETE /api/v1/task/{id})
+	DeleteTask(ctx echo.Context, id int) error
+
+	// (GET /api/v1/task/{id})
+	GetTask(ctx echo.Context, id int) error
+
+	// (GET /api/v1/tasks)
+	GetAllTask(ctx echo.Context) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -112,6 +171,81 @@ func (w *ServerInterfaceWrapper) GetCsrfToken(ctx echo.Context) error {
 	return err
 }
 
+// CreateTask converts echo context to params.
+func (w *ServerInterfaceWrapper) CreateTask(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.CreateTask(ctx)
+	return err
+}
+
+// UpdateTask converts echo context to params.
+func (w *ServerInterfaceWrapper) UpdateTask(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.UpdateTask(ctx)
+	return err
+}
+
+// DoneTask converts echo context to params.
+func (w *ServerInterfaceWrapper) DoneTask(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.DoneTask(ctx, id)
+	return err
+}
+
+// DeleteTask converts echo context to params.
+func (w *ServerInterfaceWrapper) DeleteTask(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.DeleteTask(ctx, id)
+	return err
+}
+
+// GetTask converts echo context to params.
+func (w *ServerInterfaceWrapper) GetTask(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetTask(ctx, id)
+	return err
+}
+
+// GetAllTask converts echo context to params.
+func (w *ServerInterfaceWrapper) GetAllTask(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetAllTask(ctx)
+	return err
+}
+
 // This is a simple interface which specifies echo.Route addition functions which
 // are present on both echo.Echo and echo.Group, since we want to allow using
 // either of them for path registration
@@ -145,5 +279,11 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.GET(baseURL+"/api/auth/signout", wrapper.SignOut)
 	router.POST(baseURL+"/api/auth/signup", wrapper.SignUp)
 	router.GET(baseURL+"/api/csrf", wrapper.GetCsrfToken)
+	router.POST(baseURL+"/api/v1/task", wrapper.CreateTask)
+	router.PUT(baseURL+"/api/v1/task", wrapper.UpdateTask)
+	router.GET(baseURL+"/api/v1/task/done/:id", wrapper.DoneTask)
+	router.DELETE(baseURL+"/api/v1/task/:id", wrapper.DeleteTask)
+	router.GET(baseURL+"/api/v1/task/:id", wrapper.GetTask)
+	router.GET(baseURL+"/api/v1/tasks", wrapper.GetAllTask)
 
 }

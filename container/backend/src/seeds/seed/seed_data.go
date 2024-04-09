@@ -3,13 +3,25 @@ package seed
 import (
 	"fmt"
 	"reflect"
+	"todo/app/domain/priority"
 
+	"gorm.io/driver/postgres"
 	"gorm.io/gorm"
 )
 
 type ModelInterface interface{}
 
 func SeedData(url string) error {
+	db, err := gorm.Open(postgres.Open(fmt.Sprintf("postgres://%s", url)), &gorm.Config{})
+	if err != nil {
+		return err
+	}
+
+	// prioritys
+	if err := seedPriority(db); err != nil {
+		return err
+	}
+
 	return nil
 }
 
@@ -47,5 +59,29 @@ func seed(db *gorm.DB, records []ModelInterface) error {
 		}
 	}
 
+	return nil
+}
+
+func seedPriority(db *gorm.DB) error {
+	testdata := []ModelInterface{
+		&priority.Priority{
+			Id:   1,
+			Name: "低",
+		},
+		&priority.Priority{
+			Id:   2,
+			Name: "中",
+		},
+		&priority.Priority{
+			Id:   3,
+			Name: "高",
+		},
+	}
+	if err := seed(db, testdata); err != nil {
+		return err
+	}
+	if err := db.Exec("SELECT setval('priorities_id_seq', (SELECT MAX(id) FROM priorities));").Error; err != nil {
+		return err
+	}
 	return nil
 }

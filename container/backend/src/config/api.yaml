@@ -108,6 +108,178 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DefaultResponseModel"
+  /api/v1/task:
+    post:
+      operationId: CreateTask
+      tags:
+        - v1/task
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskCreateModel"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+        "422":
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+    put:
+      operationId: UpdateTask
+      tags:
+        - v1/task
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/TaskUpdateModel"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+        "422":
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+  /api/v1/task/{id}:
+    get:
+      operationId: GetTask
+      tags:
+        - v1/task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskReadModel"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+    delete:
+      operationId: DeleteTask
+      tags:
+        - v1/task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+  /api/v1/task/done/{id}:
+    get:
+      operationId: DoneTask
+      tags:
+        - v1/task
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/TaskReadModel"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+  /api/v1/tasks:
+    get:
+      operationId: GetAllTask
+      tags:
+        - v1/task
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/TaskReadModel"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
 
 components:
   schemas:
@@ -161,3 +333,72 @@ components:
         - id
         - name
         - email
+    TaskCreateModel:
+      type: object
+      properties:
+        title:
+          type: string
+        detail:
+          type: string
+        start_date:
+          type: string
+          format: date-time
+        priority_id:
+          type: integer
+        category_id:
+          type: integer
+      required:
+        - title
+        - detail
+        - start_date
+        - priority_id
+        - category_id
+    TaskReadModel:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        detail:
+          type: string
+        start_date:
+          type: string
+          format: date-time
+        priority_id:
+          type: integer
+        category_id:
+          type: integer
+        done_flag:
+          type: boolean
+      required:
+        - id
+        - title
+        - detail
+        - start_date
+        - priority_id
+        - category_id
+        - done_flag
+    TaskUpdateModel:
+      type: object
+      properties:
+        id:
+          type: integer
+        title:
+          type: string
+        detail:
+          type: string
+        start_date:
+          type: string
+          format: date-time
+        priority_id:
+          type: integer
+        category_id:
+          type: integer
+      required:
+        - id
+        - title
+        - detail
+        - start_date
+        - priority_id
+        - category_id

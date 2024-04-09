@@ -18,9 +18,11 @@ import (
 
 func SetUp(e *echo.Echo, logger *zap.Logger, databaseHandller database.IDatabaseHandller) error {
 	authUsecase := usecase.NewAuthUsecase(databaseHandller)
+	taskUsecase := usecase.NewTaskUsecase(databaseHandller)
 
 	csrfController := controller.NewCsrfController()
-	authContoller := controller.NewAuthController(authUsecase)
+	authController := controller.NewAuthController(authUsecase)
+	taskController := controller.NewTaskController(taskUsecase)
 
 	// apiグループ
 	api := e.Group("/api")
@@ -62,9 +64,9 @@ func SetUp(e *echo.Echo, logger *zap.Logger, databaseHandller database.IDatabase
 	api.GET("/csrf", csrfController.GetCsrfToken)
 
 	// 認証関連
-	api.POST("/auth/signup", authContoller.SignUp)
-	api.POST("/auth/signin", authContoller.SignIn)
-	api.POST("/auth/signout", authContoller.SignOut)
+	api.POST("/auth/signup", authController.SignUp)
+	api.POST("/auth/signin", authController.SignIn)
+	api.GET("/auth/signout", authController.SignOut)
 
 	// v1グループ
 	v1 := api.Group("/v1")
@@ -79,6 +81,14 @@ func SetUp(e *echo.Echo, logger *zap.Logger, databaseHandller database.IDatabase
 			})
 		},
 	}))
+
+	// タスク関連
+	v1.POST("/task", taskController.CreateTask)
+	v1.PUT("/task", taskController.UpdateTask)
+	v1.GET("task/:id", taskController.GetTask)
+	v1.DELETE("task/:id", taskController.DeleteTask)
+	v1.GET("task/done/:id", taskController.DeleteTask)
+	v1.GET("/tasks", taskController.GetAllTask)
 
 	return nil
 }
