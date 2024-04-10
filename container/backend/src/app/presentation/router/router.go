@@ -20,11 +20,13 @@ func SetUp(e *echo.Echo, logger *zap.Logger, databaseHandller database.IDatabase
 	authUsecase := usecase.NewAuthUsecase(databaseHandller)
 	taskUsecase := usecase.NewTaskUsecase(databaseHandller)
 	priorityUsecase := usecase.NewPriorityUsecase(databaseHandller)
+	categoryUsecase := usecase.NewCategoryUsecase(databaseHandller)
 
 	csrfController := controller.NewCsrfController()
 	authController := controller.NewAuthController(authUsecase)
 	taskController := controller.NewTaskController(taskUsecase)
 	priorityController := controller.NewPriorityController(priorityUsecase)
+	categoryController := controller.NewCategoryController(categoryUsecase)
 
 	// apiグループ
 	api := e.Group("/api")
@@ -94,6 +96,13 @@ func SetUp(e *echo.Echo, logger *zap.Logger, databaseHandller database.IDatabase
 
 	// 優先度関連
 	v1.GET("/priorities", priorityController.GetAllPriority)
+
+	// カテゴリ関連
+	v1.POST("/category", categoryController.CreateCategory)
+	v1.PUT("/category", categoryController.UpdateCategory)
+	v1.GET("category/:id", categoryController.GetCategory)
+	v1.DELETE("category/:id", categoryController.DeleteCategory)
+	v1.GET("/categories", categoryController.GetAllCategory)
 
 	return nil
 }

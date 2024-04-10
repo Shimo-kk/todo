@@ -6,17 +6,18 @@ type CategoryEntity struct {
 	id        int
 	createdAt time.Time
 	updatedAt time.Time
+	userId    int
 	name      string
 }
 
 // エンティティの作成
-func NewEntity(name string) (*CategoryEntity, error) {
+func NewEntity(userId int, name string) (*CategoryEntity, error) {
 	// バリデーション
 	if err := validateName(name); err != nil {
 		return nil, err
 	}
 
-	return &CategoryEntity{name: name}, nil
+	return &CategoryEntity{userId: userId, name: name}, nil
 }
 
 // 名称の変更
@@ -43,6 +44,11 @@ func (e *CategoryEntity) GetCreatedAt() time.Time {
 // ゲッター　更新日時
 func (e *CategoryEntity) GetUpdatedAt() time.Time {
 	return e.updatedAt
+}
+
+// ゲッター　ユーザーID
+func (e *CategoryEntity) GetUserId() int {
+	return e.userId
 }
 
 // ゲッター　名称

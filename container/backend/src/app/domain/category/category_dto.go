@@ -6,6 +6,7 @@ type Category struct {
 	Id        int
 	CreatedAt time.Time
 	UpdatedAt time.Time
+	UserId    int
 	Name      string
 }
 
@@ -15,6 +16,7 @@ func ToDtoFromEntity(e *CategoryEntity) *Category {
 		Id:        e.id,
 		CreatedAt: e.createdAt,
 		UpdatedAt: e.updatedAt,
+		UserId:    e.userId,
 		Name:      e.name,
 	}
 }
@@ -25,6 +27,7 @@ func (d *Category) ToEntity() *CategoryEntity {
 		id:        d.Id,
 		createdAt: d.CreatedAt,
 		updatedAt: d.UpdatedAt,
+		userId:    d.UserId,
 		name:      d.Name,
 	}
 }

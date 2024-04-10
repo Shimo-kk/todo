@@ -17,6 +17,23 @@ type CSRFModel struct {
 	Csrf string `json:"csrf"`
 }
 
+// CategoryCreateModel defines model for CategoryCreateModel.
+type CategoryCreateModel struct {
+	Name string `json:"name"`
+}
+
+// CategoryReadModel defines model for CategoryReadModel.
+type CategoryReadModel struct {
+	Id   int    `json:"id"`
+	Name string `json:"name"`
+}
+
+// CategoryUpdateModel defines model for CategoryUpdateModel.
+type CategoryUpdateModel struct {
+	Id   int    `json:"id"`
+	Name string `json:"name"`
+}
+
 // DefaultResponseModel defines model for DefaultResponseModel.
 type DefaultResponseModel struct {
 	Message string `json:"message"`
@@ -84,6 +101,12 @@ type SignInJSONRequestBody = SignInModel
 // SignUpJSONRequestBody defines body for SignUp for application/json ContentType.
 type SignUpJSONRequestBody = SignUpModel
 
+// CreateCategoryJSONRequestBody defines body for CreateCategory for application/json ContentType.
+type CreateCategoryJSONRequestBody = CategoryCreateModel
+
+// UpdateCategoryJSONRequestBody defines body for UpdateCategory for application/json ContentType.
+type UpdateCategoryJSONRequestBody = CategoryUpdateModel
+
 // CreateTaskJSONRequestBody defines body for CreateTask for application/json ContentType.
 type CreateTaskJSONRequestBody = TaskCreateModel
 
@@ -107,6 +130,21 @@ type ServerInterface interface {
 
 	// (GET /api/csrf)
 	GetCsrfToken(ctx echo.Context) error
+
+	// (GET /api/v1/categories)
+	GetAllCategory(ctx echo.Context) error
+
+	// (POST /api/v1/category)
+	CreateCategory(ctx echo.Context) error
+
+	// (PUT /api/v1/category)
+	UpdateCategory(ctx echo.Context) error
+
+	// (DELETE /api/v1/category/{id})
+	DeleteCategory(ctx echo.Context, id int) error
+
+	// (GET /api/v1/category/{id})
+	GetCategory(ctx echo.Context, id int) error
 
 	// (GET /api/v1/priorities)
 	GetAllPriority(ctx echo.Context) error
@@ -177,6 +215,65 @@ func (w *ServerInterfaceWrapper) GetCsrfToken(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.GetCsrfToken(ctx)
+	return err
+}
+
+// GetAllCategory converts echo context to params.
+func (w *ServerInterfaceWrapper) GetAllCategory(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetAllCategory(ctx)
+	return err
+}
+
+// CreateCategory converts echo context to params.
+func (w *ServerInterfaceWrapper) CreateCategory(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.CreateCategory(ctx)
+	return err
+}
+
+// UpdateCategory converts echo context to params.
+func (w *ServerInterfaceWrapper) UpdateCategory(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.UpdateCategory(ctx)
+	return err
+}
+
+// DeleteCategory converts echo context to params.
+func (w *ServerInterfaceWrapper) DeleteCategory(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.DeleteCategory(ctx, id)
+	return err
+}
+
+// GetCategory converts echo context to params.
+func (w *ServerInterfaceWrapper) GetCategory(ctx echo.Context) error {
+	var err error
+	// ------------- Path parameter "id" -------------
+	var id int
+
+	err = runtime.BindStyledParameterWithLocation("simple", false, "id", runtime.ParamLocationPath, ctx.Param("id"), &id)
+	if err != nil {
+		return echo.NewHTTPError(http.StatusBadRequest, fmt.Sprintf("Invalid format for parameter id: %s", err))
+	}
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetCategory(ctx, id)
 	return err
 }
 
@@ -297,6 +394,11 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.GET(baseURL+"/api/auth/signout", wrapper.SignOut)
 	router.POST(baseURL+"/api/auth/signup", wrapper.SignUp)
 	router.GET(baseURL+"/api/csrf", wrapper.GetCsrfToken)
+	router.GET(baseURL+"/api/v1/categories", wrapper.GetAllCategory)
+	router.POST(baseURL+"/api/v1/category", wrapper.CreateCategory)
+	router.PUT(baseURL+"/api/v1/category", wrapper.UpdateCategory)
+	router.DELETE(baseURL+"/api/v1/category/:id", wrapper.DeleteCategory)
+	router.GET(baseURL+"/api/v1/category/:id", wrapper.GetCategory)
 	router.GET(baseURL+"/api/v1/priorities", wrapper.GetAllPriority)
 	router.POST(baseURL+"/api/v1/task", wrapper.CreateTask)
 	router.PUT(baseURL+"/api/v1/task", wrapper.UpdateTask)

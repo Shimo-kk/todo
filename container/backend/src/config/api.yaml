@@ -306,6 +306,148 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DefaultResponseModel"
+  /api/v1/category:
+    post:
+      operationId: CreateCategory
+      tags:
+        - v1/category
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryCreateModel"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+        "422":
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+    put:
+      operationId: UpdateCategory
+      tags:
+        - v1/category
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: "#/components/schemas/CategoryUpdateModel"
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+        "422":
+          description: Unprocessable Entity
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+  /api/v1/category/{id}:
+    get:
+      operationId: GetCategory
+      tags:
+        - v1/category
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/CategoryReadModel"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+    delete:
+      operationId: DeleteCategory
+      tags:
+        - v1/category
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: integer
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+  /api/v1/categories:
+    get:
+      operationId: GetAllCategory
+      tags:
+        - v1/category
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/CategoryReadModel"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"   
 
 components:
   schemas:
@@ -429,6 +571,33 @@ components:
         - priority_id
         - category_id
     PriorityReadModel:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      required:
+        - id
+        - name
+    CategoryCreateModel:
+      type: object
+      properties:
+        name:
+          type: string
+      required:
+        - name
+    CategoryUpdateModel:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      required:
+        - id
+        - name
+    CategoryReadModel:
       type: object
       properties:
         id:

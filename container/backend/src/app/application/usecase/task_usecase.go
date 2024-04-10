@@ -214,14 +214,14 @@ func (u *taskUsecase) GetAllTask(userId int) (*[]schema.TaskReadModel, error) {
 	}
 
 	// タスクを全件取得
-	TaskEntityList, err := taskRepository.FindAll(userEntity.GetId())
+	taskEntityList, err := taskRepository.FindAll(userEntity.GetId())
 	if err != nil {
 		return nil, err
 	}
 
 	// スキーマへ変換
 	result := []schema.TaskReadModel{}
-	for _, entity := range *TaskEntityList {
+	for _, entity := range *taskEntityList {
 		model := schema.TaskReadModel{
 			Id:         entity.GetId(),
 			Title:      entity.GetTitle(),

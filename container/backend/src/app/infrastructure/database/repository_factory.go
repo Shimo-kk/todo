@@ -2,6 +2,7 @@ package database
 
 import (
 	"todo/app/application/interface/database"
+	"todo/app/domain/category"
 	"todo/app/domain/priority"
 	"todo/app/domain/task"
 	"todo/app/domain/user"
@@ -28,4 +29,8 @@ func (rf *repositoryFactory) GetTaskRepository() task.ITaskRepository {
 
 func (rf *repositoryFactory) GetPriorityRepository() priority.IPriorityRepository {
 	return repository.NewPriorityRepository(rf.db)
+}
+
+func (rf *repositoryFactory) GetCategoryRepository() category.ICategoryRepository {
+	return repository.NewCategoryRepository(rf.db)
 }
