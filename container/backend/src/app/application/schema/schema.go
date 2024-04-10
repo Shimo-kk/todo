@@ -22,6 +22,12 @@ type DefaultResponseModel struct {
 	Message string `json:"message"`
 }
 
+// PriorityReadModel defines model for PriorityReadModel.
+type PriorityReadModel struct {
+	Id   int    `json:"id"`
+	Name string `json:"name"`
+}
+
 // SignInModel defines model for SignInModel.
 type SignInModel struct {
 	Email    string `json:"email"`
@@ -102,6 +108,9 @@ type ServerInterface interface {
 	// (GET /api/csrf)
 	GetCsrfToken(ctx echo.Context) error
 
+	// (GET /api/v1/priorities)
+	GetAllPriority(ctx echo.Context) error
+
 	// (POST /api/v1/task)
 	CreateTask(ctx echo.Context) error
 
@@ -168,6 +177,15 @@ func (w *ServerInterfaceWrapper) GetCsrfToken(ctx echo.Context) error {
 
 	// Invoke the callback with all the unmarshaled arguments
 	err = w.Handler.GetCsrfToken(ctx)
+	return err
+}
+
+// GetAllPriority converts echo context to params.
+func (w *ServerInterfaceWrapper) GetAllPriority(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetAllPriority(ctx)
 	return err
 }
 
@@ -279,6 +297,7 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.GET(baseURL+"/api/auth/signout", wrapper.SignOut)
 	router.POST(baseURL+"/api/auth/signup", wrapper.SignUp)
 	router.GET(baseURL+"/api/csrf", wrapper.GetCsrfToken)
+	router.GET(baseURL+"/api/v1/priorities", wrapper.GetAllPriority)
 	router.POST(baseURL+"/api/v1/task", wrapper.CreateTask)
 	router.PUT(baseURL+"/api/v1/task", wrapper.UpdateTask)
 	router.GET(baseURL+"/api/v1/task/done/:id", wrapper.DoneTask)

@@ -213,6 +213,7 @@ func (u *taskUsecase) GetAllTask(userId int) (*[]schema.TaskReadModel, error) {
 		return nil, core.NewError(core.NotFoundError, "ユーザーが存在しません。")
 	}
 
+	// タスクを全件取得
 	TaskEntityList, err := taskRepository.FindAll(userEntity.GetId())
 	if err != nil {
 		return nil, err

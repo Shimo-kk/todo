@@ -280,6 +280,32 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DefaultResponseModel"
+  /api/v1/priorities:
+    get:
+      operationId: GetAllPriority
+      tags:
+        - v1/priority
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/PriorityReadModel"
+        "401":
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
 
 components:
   schemas:
@@ -402,3 +428,13 @@ components:
         - start_date
         - priority_id
         - category_id
+    PriorityReadModel:
+      type: object
+      properties:
+        id:
+          type: integer
+        name:
+          type: string
+      required:
+        - id
+        - name

@@ -19,10 +19,12 @@ import (
 func SetUp(e *echo.Echo, logger *zap.Logger, databaseHandller database.IDatabaseHandller) error {
 	authUsecase := usecase.NewAuthUsecase(databaseHandller)
 	taskUsecase := usecase.NewTaskUsecase(databaseHandller)
+	priorityUsecase := usecase.NewPriorityUsecase(databaseHandller)
 
 	csrfController := controller.NewCsrfController()
 	authController := controller.NewAuthController(authUsecase)
 	taskController := controller.NewTaskController(taskUsecase)
+	priorityController := controller.NewPriorityController(priorityUsecase)
 
 	// apiグループ
 	api := e.Group("/api")
@@ -89,6 +91,9 @@ func SetUp(e *echo.Echo, logger *zap.Logger, databaseHandller database.IDatabase
 	v1.DELETE("task/:id", taskController.DeleteTask)
 	v1.GET("task/done/:id", taskController.DeleteTask)
 	v1.GET("/tasks", taskController.GetAllTask)
+
+	// 優先度関連
+	v1.GET("/priorities", priorityController.GetAllPriority)
 
 	return nil
 }
