@@ -47,14 +47,14 @@ func (c *authController) SignIn(context echo.Context) error {
 	}
 
 	// ユースケースを実行
-	responseBody, err := c.usecase.SignIn(requestBody)
+	userId, err := c.usecase.SignIn(requestBody)
 	if err != nil {
 		return err
 	}
 
 	// JWTトークンの生成
 	token := jwt.NewWithClaims(jwt.SigningMethodHS256, jwt.MapClaims{
-		"user_id": responseBody.Id,
+		"user_id": userId,
 		"exp":     time.Now().Add(24 * time.Hour).Unix(),
 	})
 	tokenStr, err := token.SignedString([]byte(os.Getenv("JWT_KEY")))
@@ -74,7 +74,7 @@ func (c *authController) SignIn(context echo.Context) error {
 	cookie.SameSite = http.SameSiteNoneMode
 	context.SetCookie(cookie)
 
-	return context.JSON(http.StatusOK, responseBody)
+	return context.JSON(http.StatusOK, responce.NewDefaultRespoce("サインインしました。"))
 }
 
 // サインアウト

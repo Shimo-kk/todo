@@ -71,7 +71,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: "#/components/schemas/UserReadModel"
+                $ref: "#/components/schemas/DefaultResponseModel"
         "400":
           description: Bad Request
           content:
@@ -108,6 +108,31 @@ paths:
             application/json:
               schema:
                 $ref: "#/components/schemas/DefaultResponseModel"
+  /api/v1/user:
+    get:
+      operationId: GetUser
+      tags: 
+        - v1/user
+      responses:
+        "200":
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/UserReadModel"
+        "400":
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+        "404":
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/DefaultResponseModel"
+
   /api/v1/task:
     post:
       operationId: CreateTask

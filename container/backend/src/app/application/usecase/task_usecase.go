@@ -102,7 +102,7 @@ func (u *taskUsecase) UpdateTask(userId int, data schema.TaskUpdateModel) error 
 // タスクの取得
 func (u *taskUsecase) GetTask(userId int, id int) (*schema.TaskReadModel, error) {
 	repositoryFactory := u.databaseHandller.GetRepositoryFactory()
-	userRepository := repositoryFactory.GetTaskRepository()
+	userRepository := repositoryFactory.GetUserRepository()
 	taskRepository := repositoryFactory.GetTaskRepository()
 
 	// ユーザーを取得
@@ -134,7 +134,7 @@ func (u *taskUsecase) GetTask(userId int, id int) (*schema.TaskReadModel, error)
 		DoneFlag:   taskEntity.GetDoneFlag(),
 	}
 
-	return &result, err
+	return &result, nil
 }
 
 // タスクの削除

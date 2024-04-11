@@ -166,6 +166,9 @@ type ServerInterface interface {
 
 	// (GET /api/v1/tasks)
 	GetAllTask(ctx echo.Context) error
+
+	// (GET /api/v1/user)
+	GetUser(ctx echo.Context) error
 }
 
 // ServerInterfaceWrapper converts echo contexts to parameters.
@@ -361,6 +364,15 @@ func (w *ServerInterfaceWrapper) GetAllTask(ctx echo.Context) error {
 	return err
 }
 
+// GetUser converts echo context to params.
+func (w *ServerInterfaceWrapper) GetUser(ctx echo.Context) error {
+	var err error
+
+	// Invoke the callback with all the unmarshaled arguments
+	err = w.Handler.GetUser(ctx)
+	return err
+}
+
 // This is a simple interface which specifies echo.Route addition functions which
 // are present on both echo.Echo and echo.Group, since we want to allow using
 // either of them for path registration
@@ -406,5 +418,6 @@ func RegisterHandlersWithBaseURL(router EchoRouter, si ServerInterface, baseURL 
 	router.DELETE(baseURL+"/api/v1/task/:id", wrapper.DeleteTask)
 	router.GET(baseURL+"/api/v1/task/:id", wrapper.GetTask)
 	router.GET(baseURL+"/api/v1/tasks", wrapper.GetAllTask)
+	router.GET(baseURL+"/api/v1/user", wrapper.GetUser)
 
 }

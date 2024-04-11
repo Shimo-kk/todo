@@ -48,30 +48,23 @@ func (u *authUsecase) SignUp(data schema.SignUpModel) error {
 }
 
 // サインイン
-func (u *authUsecase) SignIn(data schema.SignInModel) (*schema.UserReadModel, error) {
+func (u *authUsecase) SignIn(data schema.SignInModel) (int, error) {
 	repositoryFactory := u.databaseHandller.GetRepositoryFactory()
 	userRepository := repositoryFactory.GetUserRepository()
 
 	// E-mailアドレスでユーザーを取得
 	userEntity, err := userRepository.FindByEmail(data.Email)
 	if err != nil {
-		return nil, err
+		return 0, err
 	}
 	if userEntity == nil {
-		return nil, core.NewError(core.NotFoundError, "入力されたE-mailアドレスのユーザーが存在しません。")
+		return 0, core.NewError(core.NotFoundError, "入力されたE-mailアドレスのユーザーが存在しません。")
 	}
 
 	// パスワードを検証
 	if err := userEntity.VerifyPassword(data.Password); err != nil {
-		return nil, core.NewError(core.BadRequestError, "パスワードに誤りがあります。")
+		return 0, core.NewError(core.BadRequestError, "パスワードに誤りがあります。")
 	}
 
-	// スキーマへ変換
-	result := schema.UserReadModel{
-		Id:    userEntity.GetId(),
-		Name:  userEntity.GetName(),
-		Email: userEntity.GetEmail(),
-	}
-
-	return &result, nil
+	return userEntity.GetId(), nil
 }
