@@ -518,12 +518,20 @@ components:
       properties:
         id:
           type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
         name:
           type: string
         email:
           type: string
       required:
         - id
+        - created_at
+        - updated_at
         - name
         - email
     TaskCreateModel:
@@ -551,6 +559,12 @@ components:
       properties:
         id:
           type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
         title:
           type: string
         detail:
@@ -566,6 +580,8 @@ components:
           type: boolean
       required:
         - id
+        - created_at
+        - updated_at
         - title
         - detail
         - start_date
@@ -577,6 +593,12 @@ components:
       properties:
         id:
           type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
         title:
           type: string
         detail:
@@ -590,6 +612,8 @@ components:
           type: integer
       required:
         - id
+        - created_at
+        - updated_at
         - title
         - detail
         - start_date
@@ -600,10 +624,18 @@ components:
       properties:
         id:
           type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
         name:
           type: string
       required:
         - id
+        - created_at
+        - updated_at
         - name
     CategoryCreateModel:
       type: object
@@ -617,18 +649,34 @@ components:
       properties:
         id:
           type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
         name:
           type: string
       required:
         - id
+        - created_at
+        - updated_at
         - name
     CategoryReadModel:
       type: object
       properties:
         id:
           type: integer
+        created_at:
+          type: string
+          format: date-time
+        updated_at:
+          type: string
+          format: date-time
         name:
           type: string
       required:
         - id
+        - created_at
+        - updated_at
         - name

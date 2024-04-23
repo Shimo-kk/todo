@@ -33,6 +33,8 @@ func (u *userUsecase) GetUser(id int) (*schema.UserReadModel, error) {
 	// スキーマへ変換
 	result := schema.UserReadModel{
 		Id:    userEntity.GetId(),
+		CreatedAt: userEntity.GetUpdatedAt(),
+		UpdatedAt: userEntity.GetUpdatedAt(),
 		Name:  userEntity.GetName(),
 		Email: userEntity.GetEmail(),
 	}

@@ -24,14 +24,18 @@ type CategoryCreateModel struct {
 
 // CategoryReadModel defines model for CategoryReadModel.
 type CategoryReadModel struct {
-	Id   int    `json:"id"`
-	Name string `json:"name"`
+	CreatedAt time.Time `json:"created_at"`
+	Id        int       `json:"id"`
+	Name      string    `json:"name"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 // CategoryUpdateModel defines model for CategoryUpdateModel.
 type CategoryUpdateModel struct {
-	Id   int    `json:"id"`
-	Name string `json:"name"`
+	CreatedAt time.Time `json:"created_at"`
+	Id        int       `json:"id"`
+	Name      string    `json:"name"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 // DefaultResponseModel defines model for DefaultResponseModel.
@@ -41,8 +45,10 @@ type DefaultResponseModel struct {
 
 // PriorityReadModel defines model for PriorityReadModel.
 type PriorityReadModel struct {
-	Id   int    `json:"id"`
-	Name string `json:"name"`
+	CreatedAt time.Time `json:"created_at"`
+	Id        int       `json:"id"`
+	Name      string    `json:"name"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 // SignInModel defines model for SignInModel.
@@ -70,29 +76,35 @@ type TaskCreateModel struct {
 // TaskReadModel defines model for TaskReadModel.
 type TaskReadModel struct {
 	CategoryId int       `json:"category_id"`
+	CreatedAt  time.Time `json:"created_at"`
 	Detail     string    `json:"detail"`
 	DoneFlag   bool      `json:"done_flag"`
 	Id         int       `json:"id"`
 	PriorityId int       `json:"priority_id"`
 	StartDate  time.Time `json:"start_date"`
 	Title      string    `json:"title"`
+	UpdatedAt  time.Time `json:"updated_at"`
 }
 
 // TaskUpdateModel defines model for TaskUpdateModel.
 type TaskUpdateModel struct {
 	CategoryId int       `json:"category_id"`
+	CreatedAt  time.Time `json:"created_at"`
 	Detail     string    `json:"detail"`
 	Id         int       `json:"id"`
 	PriorityId int       `json:"priority_id"`
 	StartDate  time.Time `json:"start_date"`
 	Title      string    `json:"title"`
+	UpdatedAt  time.Time `json:"updated_at"`
 }
 
 // UserReadModel defines model for UserReadModel.
 type UserReadModel struct {
-	Email string `json:"email"`
-	Id    int    `json:"id"`
-	Name  string `json:"name"`
+	CreatedAt time.Time `json:"created_at"`
+	Email     string    `json:"email"`
+	Id        int       `json:"id"`
+	Name      string    `json:"name"`
+	UpdatedAt time.Time `json:"updated_at"`
 }
 
 // SignInJSONRequestBody defines body for SignIn for application/json ContentType.

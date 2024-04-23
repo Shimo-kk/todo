@@ -113,8 +113,10 @@ func (u *categoryUsecase) GetCategory(userId int, id int) (*schema.CategoryReadM
 
 	// スキーマへ変換
 	result := schema.CategoryReadModel{
-		Id:   categoryEntity.GetId(),
-		Name: categoryEntity.GetName(),
+		Id:        categoryEntity.GetId(),
+		CreatedAt: categoryEntity.GetCreatedAt(),
+		UpdatedAt: categoryEntity.GetUpdatedAt(),
+		Name:      categoryEntity.GetName(),
 	}
 
 	return &result, err
@@ -169,8 +171,10 @@ func (u *categoryUsecase) GetAllCategory(userId int) (*[]schema.CategoryReadMode
 	result := []schema.CategoryReadModel{}
 	for _, entity := range *categoryEntityList {
 		model := schema.CategoryReadModel{
-			Id:   entity.GetId(),
-			Name: entity.GetName(),
+			Id:        entity.GetId(),
+			CreatedAt: entity.GetCreatedAt(),
+			UpdatedAt: entity.GetUpdatedAt(),
+			Name:      entity.GetName(),
 		}
 		result = append(result, model)
 	}

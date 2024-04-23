@@ -126,6 +126,8 @@ func (u *taskUsecase) GetTask(userId int, id int) (*schema.TaskReadModel, error)
 	// スキーマへ変換
 	result := schema.TaskReadModel{
 		Id:         taskEntity.GetId(),
+		CreatedAt:  taskEntity.GetCreatedAt(),
+		UpdatedAt:  taskEntity.GetUpdatedAt(),
 		Title:      taskEntity.GetTitle(),
 		Detail:     taskEntity.GetDetail(),
 		StartDate:  taskEntity.GetStartDate(),
@@ -224,6 +226,8 @@ func (u *taskUsecase) GetAllTask(userId int) (*[]schema.TaskReadModel, error) {
 	for _, entity := range *taskEntityList {
 		model := schema.TaskReadModel{
 			Id:         entity.GetId(),
+			CreatedAt:  entity.GetCreatedAt(),
+			UpdatedAt:  entity.GetUpdatedAt(),
 			Title:      entity.GetTitle(),
 			Detail:     entity.GetDetail(),
 			StartDate:  entity.GetStartDate(),

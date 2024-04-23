@@ -12,6 +12,7 @@ const (
 	ValidationError    ErrorCode = "ValidationError"
 	NotFoundError      ErrorCode = "NotFoundError"
 	AlreadyExistsError ErrorCode = "AlreadyExistsError"
+	ConflictError      ErrorCode = "ConflictError"
 	SystemError        ErrorCode = "SystemError"
 )
 

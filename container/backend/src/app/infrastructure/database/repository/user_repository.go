@@ -72,6 +72,19 @@ func (r *userRepository) FindByEmail(email string) (*user.UserEntity, error) {
 // 更新
 func (r *userRepository) Update(entity *user.UserEntity) (*user.UserEntity, error) {
 	dto := user.ToDtoFromEntity(entity)
+	old := user.User{}
+	if err := r.tx.Where(&user.User{Id: dto.Id}).First(&old).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		} else {
+			return nil, core.NewError(core.SystemError, "ユーザーの取得に失敗しました。->"+err.Error())
+		}
+	}
+
+	if !dto.UpdatedAt.After(old.UpdatedAt) {
+		return nil, core.NewError(core.ConflictError, "ユーザーの更新に失敗しました。別のリクエストが同じリソースを変更しています。")
+	}
+
 	if err := r.tx.Save(dto).Error; err != nil {
 		return nil, core.NewError(core.SystemError, "ユーザーの更新に失敗しました。->"+err.Error())
 	}

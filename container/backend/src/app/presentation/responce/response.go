@@ -16,6 +16,8 @@ func ConvertErrorCode(code core.ErrorCode) int {
 		return http.StatusNotFound
 	case core.AlreadyExistsError:
 		return http.StatusForbidden
+	case core.ConflictError:
+		return http.StatusConflict
 	default:
 		return http.StatusInternalServerError
 	}

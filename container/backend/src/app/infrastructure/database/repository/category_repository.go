@@ -60,6 +60,19 @@ func (r *categoryRepository) FindById(id int) (*category.CategoryEntity, error) 
 // 更新
 func (r *categoryRepository) Update(entity *category.CategoryEntity) (*category.CategoryEntity, error) {
 	dto := category.ToDtoFromEntity(entity)
+	old := category.Category{}
+	if err := r.tx.Where(&category.Category{Id: old.Id}).First(&dto).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		} else {
+			return nil, core.NewError(core.SystemError, "カテゴリの取得に失敗しました。->"+err.Error())
+		}
+	}
+
+	if !dto.UpdatedAt.After(old.UpdatedAt) {
+		return nil, core.NewError(core.ConflictError, "タスクの更新に失敗しました。別のリクエストが同じリソースを変更しています。")
+	}
+
 	if err := r.tx.Save(dto).Error; err != nil {
 		return nil, core.NewError(core.SystemError, "カテゴリの更新に失敗しました。->"+err.Error())
 	}

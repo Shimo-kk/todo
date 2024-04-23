@@ -60,6 +60,19 @@ func (r *taskRepository) FindById(id int) (*task.TaskEntity, error) {
 // 更新
 func (r *taskRepository) Update(entity *task.TaskEntity) (*task.TaskEntity, error) {
 	dto := task.ToDtoFromEntity(entity)
+	old := task.Task{}
+	if err := r.tx.Where(&task.Task{Id: dto.Id}).First(&dto).Error; err != nil {
+		if err == gorm.ErrRecordNotFound {
+			return nil, nil
+		} else {
+			return nil, core.NewError(core.SystemError, "タスクの取得に失敗しました。->"+err.Error())
+		}
+	}
+
+	if !dto.UpdatedAt.After(old.UpdatedAt) {
+		return nil, core.NewError(core.ConflictError, "タスクの更新に失敗しました。別のリクエストが同じリソースを変更しています。")
+	}
+
 	if err := r.tx.Save(dto).Error; err != nil {
 		return nil, core.NewError(core.SystemError, "タスクの更新に失敗しました。->"+err.Error())
 	}

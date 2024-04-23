@@ -30,8 +30,10 @@ func (u *priorityUsecase) GetAllPriority() (*[]schema.PriorityReadModel, error) 
 	result := []schema.PriorityReadModel{}
 	for _, entity := range *priorityEntityList {
 		model := schema.PriorityReadModel{
-			Id:   entity.GetId(),
-			Name: entity.GetName(),
+			Id:        entity.GetId(),
+			CreatedAt: entity.GetCreatedAt(),
+			UpdatedAt: entity.GetUpdatedAt(),
+			Name:      entity.GetName(),
 		}
 		result = append(result, model)
 	}
