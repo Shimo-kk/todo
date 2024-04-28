@@ -9,4 +9,11 @@ export default defineNuxtConfig({
     },
   },
   modules: ['@pinia/nuxt', '@pinia-plugin-persistedstate/nuxt'],
+  runtimeConfig: {
+    public: {
+      debug: false,
+      api_url: '',
+    },
+  },
+  ssr: false,
 })
